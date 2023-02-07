@@ -9,12 +9,12 @@
 #include <SoftwareSerial.h>
 
 // Define PINS Connection
-#define DHTPIN 2
-#define RELAY_PIN 3
-#define TX_GSM 4
-#define RX_GSM 5
+#define DHTPIN 5
+#define RELAY_PIN 4
+#define TX_GSM 2
+#define RX_GSM 3
 #define PIN_ERR 6
-#define PIN_BUT_STOP 7
+#define PIN_BUT_STOP 7 // With PullUP Resistor
 
 // Other Definition
 #define DHTTYPE DHT22 // Define model of DHT
@@ -78,10 +78,11 @@ void loop() {
   if (mySerial.available() > 0) // if message is avariable
     if (mySerial.read() == '\n')  // If character '\n', there's a new text line
       message = mySerial.readStringUntil('\n');
-      if (message.indexOf(',') != -1 && checkStringIsNumerical(message))  // Caso 1 
+      if (message.indexOf(',') != -1 && checkStringIsNumerical(message))  // Case 1
         ControlRemote = true;
         temperature = message.toFloat();
       if (message.indexOf(',') != -1 && checkStringIsNumerical(message) == false)
+        
         // Grep message and convert into 2 variables
       if (message.indexOf(',') == -1) // Caso 3
         ControlRemote = false;
@@ -115,12 +116,9 @@ void loop() {
   
 }
 
-
 // External Functions ------------------------
 
-
-// Check is numerical
-
+// Serial Comunication
 void updateSerial()
 {
   delay(500);
@@ -134,7 +132,7 @@ void updateSerial()
   }
 }
 
-
+// Check is numerical
 bool checkStringIsNumerical(String myString) {
   for (int i = 0; i < sizeof(myString); i++) {
     if (!isDigit(myString.charAt(i))) {
